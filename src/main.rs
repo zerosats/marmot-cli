@@ -69,6 +69,15 @@ enum Commands {
         /// Group ID to receive from (optional, receives from all if omitted)
         #[arg(long)]
         group_id: Option<String>,
+        /// Fetch only events after this timestamp or event ID
+        #[arg(long)]
+        since: Option<String>,
+        /// Stream new messages continuously (NDJSON output)
+        #[arg(long)]
+        watch: bool,
+        /// Poll interval in seconds (used with --watch)
+        #[arg(long, default_value = "5")]
+        poll_interval: u64,
     },
 
     /// Show identity info (npub, pubkey)
@@ -101,7 +110,9 @@ async fn main() -> Result<()> {
         Commands::Send { group_id, message } => {
             commands::send::run(&config, &group_id, &message).await
         }
-        Commands::Receive { group_id } => commands::receive::run(&config, group_id.as_deref()).await,
+        Commands::Receive { group_id, since, watch, poll_interval } => {
+            commands::receive::run(&config, group_id.as_deref(), since.as_deref(), watch, poll_interval).await
+        }
         Commands::Whoami => commands::whoami::run(&config).await,
     }
 }

@@ -32,6 +32,9 @@ hex = "0.4"
 anyhow = "1"
 thiserror = "1"
 
+# Config file
+toml = "0.8"
+
 # Utilities
 dirs = "5"
 tracing = "0.1"

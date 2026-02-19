@@ -56,6 +56,15 @@ pub async fn run(config: &Config, nsec_file: Option<String>) -> Result<()> {
         false
     };
 
+    let save_config = Config {
+        key_file: Some(key_path.clone()),
+        db_path: config.db_path.clone(),
+        relays: config.relays.clone(),
+    };
+    if let Err(e) = save_config.save() {
+        tracing::warn!("Failed to save config: {}", e);
+    }
+
     let output = InitOutput {
         pubkey: keys.public_key().to_hex(),
         npub: keys.public_key().to_bech32().unwrap_or_default(),
